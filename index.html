@@ -455,7 +455,6 @@
 
                     if (response.ok && data.status) { // Asumsi `data.status` dari respons menandakan sukses
                         const result = data.result;
-                        // const panelDomainUrl = `https://${result.domain}`; // Sudah ada https:// dari API, jadi pakai langsung
                         const panelDomainUrl = result.domain; // Gunakan domain dari API langsung
 
                         // Konten yang akan dicopy secara keseluruhan (diformat lebih rapi)
@@ -489,7 +488,7 @@ Domain: ${panelDomainUrl}
                                 <button class="copy-all-button" data-copy-value="${fullTextToCopy.trim()}">Copy All Details</button>
                             </div>
                             <p class="contact-message">
-                                Jika tidak bisa login, silakan hubungi <a href="#">Wanz Assistant</a>
+                                Jika tidak bisa login, silakan hubungi <a href="#">Admin</a>
                             </p>
                         `;
                         showMessage('success', successMessageHTML);
