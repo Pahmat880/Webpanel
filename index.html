@@ -182,6 +182,7 @@
             background-color: rgba(125, 207, 255, 0.15); /* Light blue with transparency */
             color: var(--success-color);
             border: 1px solid var(--success-color);
+            padding: 20px; /* More padding for better look */
         }
 
         #responseMessage.error {
@@ -202,12 +203,112 @@
             text-decoration: underline;
             color: var(--accent-color);
         }
+
+        /* Styling for the result details */
+        .result-detail {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed rgba(255,255,255,0.1); /* Subtle separator */
+        }
+        .result-detail:last-of-type {
+            border-bottom: none; /* No border for the last one */
+        }
+        .result-detail span:first-child {
+            font-weight: 600;
+            color: var(--text-color);
+            min-width: 100px; /* Align labels */
+        }
+        .result-detail span:last-child {
+            flex-grow: 1; /* Take remaining space */
+            text-align: right;
+            color: var(--accent-color);
+            word-break: break-all;
+        }
+        .result-detail a {
+             /* Override for links in result details */
+            color: var(--success-color) !important;
+            word-break: break-all;
+        }
+        .result-detail a:hover {
+            text-decoration: underline;
+        }
+
+        .result-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        }
+
+        .result-actions button {
+            width: calc(50% - 5px); /* Two buttons per row */
+            padding: 10px;
+            font-size: 0.9em;
+            margin-top: 0;
+            box-shadow: none; /* Remove individual button shadow here */
+            background-color: #414868; /* Darker background for copy/login buttons */
+            color: var(--text-color);
+        }
+        .result-actions button:hover {
+            background-color: #555c7f;
+            transform: translateY(-1px);
+        }
+        /* Specific style for login button if desired */
+        .result-actions button.login-panel-button {
+            background-color: var(--success-color);
+            color: var(--bg-color);
+        }
+        .result-actions button.login-panel-button:hover {
+            background-color: #61b1e3;
+        }
+
+        /* New button for Copy All */
+        .copy-all-button {
+            width: 100%; /* Full width */
+            margin-top: 15px; /* Space from other buttons */
+            background-color: var(--accent-color); /* Use accent color for main copy button */
+            color: var(--bg-color);
+            padding: 12px;
+            font-size: 1em;
+            font-weight: 600;
+        }
+        .copy-all-button:hover {
+            background-color: #a485e6;
+        }
+
+        .contact-message {
+            font-size: 0.85em;
+            color: #999;
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .contact-message a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .contact-message a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Create Panel Hosting Website</h1>
         <form id="createPanelForm">
+            <div class="form-group">
+                <label for="accessKey">Access Key:</label>
+                <input type="password" id="accessKey" name="accessKey" placeholder="Masukkan Access Key Anda" required>
+            </div>
+
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" placeholder="Contoh: user_keren2025" required>
@@ -253,6 +354,9 @@
             const DEFAULT_NEST_ID = "5";                               // Ganti dengan Nest ID default Anda
             const DEFAULT_LOCATION_ID = "1";                           // Ganti dengan Location ID default Anda
 
+            // Access Key untuk website ini (hardcoded) - SANGAT TIDAK AMAN UNTUK AKSES PUBLIK
+            const WEBSITE_ACCESS_KEY = "MATCP-X4A2F8E1B9D7C6"; // Ganti dengan Access Key yang Anda inginkan
+
             // Link dasar dengan placeholder (jangan ubah format ini)
             const BASE_URL_TEMPLATE = "https://restapi.mat.web.id/api/pterodactyl/create?username=&ram=&disk=&cpu=&eggid=&nestid=&loc=&domain=&ptla=&ptlc=";
             // --- AKHIR KONFIGURASI SENSITIF ---
@@ -263,9 +367,9 @@
             const responseMessageDiv = document.getElementById('responseMessage');
             
             // Fungsi penampil pesan
-            function showMessage(type, message) {
+            function showMessage(type, messageHTML) {
                 responseMessageDiv.className = type; // 'success' or 'error'
-                responseMessageDiv.innerHTML = message;
+                responseMessageDiv.innerHTML = messageHTML;
             }
 
             createPanelForm.addEventListener('submit', async (event) => {
@@ -276,8 +380,18 @@
                 responseMessageDiv.innerHTML = ''; // Kosongkan pesan sebelumnya
                 responseMessageDiv.className = ''; // Hapus kelas sebelumnya
 
+                const accessKey = document.getElementById('accessKey').value;
                 const username = document.getElementById('username').value;
                 const hostingPackage = document.getElementById('hostingPackage').value;
+
+                // --- Validasi Access Key ---
+                if (accessKey !== WEBSITE_ACCESS_KEY) {
+                    showMessage('error', 'Access Key Salah. Silakan coba lagi.');
+                    createButton.textContent = 'Create Panel';
+                    createButton.disabled = false;
+                    return;
+                }
+                // --- Akhir Validasi Access Key ---
 
                 if (!username || !hostingPackage) {
                     showMessage('error', 'Username dan Paket Hosting harus diisi!');
@@ -320,13 +434,13 @@
                 // Pastikan nilai-nilai ini di-encode untuk URL
                 const finalUrl = BASE_URL_TEMPLATE
                     .replace('username=', `username=${encodeURIComponent(username)}`)
-                    .replace('ram=', `ram=${ram}`) // RAM, disk, cpu biasanya angka, tidak perlu encode
+                    .replace('ram=', `ram=${ram}`) 
                     .replace('disk=', `disk=${disk}`)
                     .replace('cpu=', `cpu=${cpu}`)
                     .replace('eggid=', `eggid=${DEFAULT_EGG_ID}`)
                     .replace('nestid=', `nestid=${DEFAULT_NEST_ID}`)
                     .replace('loc=', `loc=${DEFAULT_LOCATION_ID}`)
-                    .replace('domain=', `domain=${encodeURIComponent(PTERODACTYL_DOMAIN)}`) // Encode domain
+                    .replace('domain=', `domain=${encodeURIComponent(PTERODACTYL_DOMAIN)}`) 
                     .replace('ptla=', `ptla=${PTERODACTYL_PTLA}`)
                     .replace('ptlc=', `ptlc=${PTERODACTYL_PTLC}`);
                 // --- Akhir Pengisian Placeholder ---
@@ -340,16 +454,44 @@
                     const data = await response.json();
 
                     if (response.ok && data.status) { // Asumsi `data.status` dari respons menandakan sukses
-                        showMessage('success', `
-                            <b>Server berhasil dibuat!</b><br>
-                            Username: ${data.result.username}<br>
-                            Password: ${data.result.password}<br>
-                            Paket: ${hostingPackage.toUpperCase()}<br>
-                            ID User: ${data.result.id_user}<br>
-                            Server ID: ${data.result.id_server}<br>
-                            Domain: <a href="https://${data.result.domain}" target="_blank">${data.result.domain}</a><br><br>
-                            Jika tidak bisa login, silakan hubungi <a href="#">Wanz Assistant</a>
-                        `);
+                        const result = data.result;
+                        const panelDomainUrl = `https://${result.domain}`;
+
+                        // Konten yang akan dicopy secara keseluruhan (diformat lebih rapi)
+                        const fullTextToCopy = `
+==============================
+   DETAIL AKUN PANEL ANDA   
+==============================
+Username: ${result.username}
+Password: ${result.password}
+Paket: ${hostingPackage.toUpperCase()}
+ID User: ${result.id_user}
+Server ID: ${result.id_server}
+Domain: ${panelDomainUrl}
+==============================
+`;
+
+                        // Merapikan tampilan pesan sukses
+                        const successMessageHTML = `
+                            <div class="result-detail"><span>Username:</span> <span id="copyUsernameValue">${result.username}</span></div>
+                            <div class="result-detail"><span>Password:</span> <span id="copyPasswordValue">${result.password}</span></div>
+                            <div class="result-detail"><span>Paket:</span> <span>${hostingPackage.toUpperCase()}</span></div>
+                            <div class="result-detail"><span>ID User:</span> <span>${result.id_user}</span></div>
+                            <div class="result-detail"><span>Server ID:</span> <span>${result.id_server}</span></div>
+                            <div class="result-detail"><span>Domain:</span> <span id="copyDomainValue"><a href="${panelDomainUrl}" target="_blank">${result.domain}</a></span></div>
+                            
+                            <div class="result-actions">
+                                <button class="copy-button" data-copy-target="copyUsernameValue">Copy Username</button>
+                                <button class="copy-button" data-copy-target="copyPasswordValue">Copy Password</button>
+                                <button class="copy-button" data-copy-target="copyDomainValue">Copy Domain</button>
+                                <button class="login-panel-button" onclick="window.open('${panelDomainUrl}', '_blank')">Login Panel</button>
+                                <button class="copy-all-button" data-copy-value="${fullTextToCopy.trim()}">Copy All Details</button>
+                            </div>
+                            <p class="contact-message">
+                                Jika tidak bisa login, silakan hubungi <a href="#">Wanz Assistant</a>
+                            </p>
+                        `;
+                        showMessage('success', successMessageHTML);
                         createPanelForm.reset(); 
 
                     } else {
@@ -360,10 +502,48 @@
                 } catch (error) {
                     // Terjadi error jaringan (misalnya CORS block)
                     console.error('Error saat menghubungi API eksternal:', error);
-                    showMessage('error', `Terjadi kesalahan jaringan atau server tidak merespons: ${error.message}.<br>Kemungkinan besar masalah CORS.`);
+                    showMessage('error', `Terjadi kesalahan jaringan atau server tidak merespons: ${error.message}.<br>Jika ini terjadi terus, kemungkinan besar masalah CORS dari server restapi.mat.web.id.`);
                 } finally {
                     createButton.textContent = 'Create Panel';
                     createButton.disabled = false;
+                }
+            });
+
+            // Universal Copy Functionality (untuk tombol copy individual dan copy all)
+            responseMessageDiv.addEventListener('click', async (event) => {
+                if (event.target.classList.contains('copy-button')) {
+                    const targetId = event.target.dataset.copyTarget;
+                    const textToCopy = document.getElementById(targetId).textContent;
+                    
+                    if (textToCopy) {
+                        try {
+                            await navigator.clipboard.writeText(textToCopy);
+                            event.target.textContent = 'Copied!';
+                            setTimeout(() => {
+                                // Reset button text based on its original target
+                                if (targetId === 'copyUsernameValue') event.target.textContent = 'Copy Username';
+                                else if (targetId === 'copyPasswordValue') event.target.textContent = 'Copy Password';
+                                else if (targetId === 'copyDomainValue') event.target.textContent = 'Copy Domain';
+                            }, 1500);
+                        } catch (err) {
+                            console.error('Failed to copy text:', err);
+                            alert('Gagal menyalin. Silakan salin manual.');
+                        }
+                    }
+                } else if (event.target.classList.contains('copy-all-button')) { // Logic for "Copy All Details" button
+                    const textToCopy = event.target.dataset.copyValue;
+                     if (textToCopy) {
+                        try {
+                            await navigator.clipboard.writeText(textToCopy);
+                            event.target.textContent = 'All Copied!';
+                            setTimeout(() => {
+                                event.target.textContent = 'Copy All Details';
+                            }, 1500);
+                        } catch (err) {
+                            console.error('Failed to copy all text:', err);
+                            alert('Gagal menyalin semua. Silakan salin manual.');
+                        }
+                    }
                 }
             });
         });
