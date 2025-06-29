@@ -455,7 +455,7 @@
 
                     if (response.ok && data.status) { // Asumsi `data.status` dari respons menandakan sukses
                         const result = data.result;
-                        const panelDomainUrl = `https://${result.domain}`;
+                        const panelDomainUrl = `${result.domain}`;
 
                         // Konten yang akan dicopy secara keseluruhan (diformat lebih rapi)
                         const fullTextToCopy = `
@@ -488,7 +488,7 @@ Domain: ${panelDomainUrl}
                                 <button class="copy-all-button" data-copy-value="${fullTextToCopy.trim()}">Copy All Details</button>
                             </div>
                             <p class="contact-message">
-                                Jika tidak bisa login, silakan hubungi <a href="#">Wanz Assistant</a>
+                                Jika tidak bisa login, silakan hubungi <a href="#">admin</a>
                             </p>
                         `;
                         showMessage('success', successMessageHTML);
