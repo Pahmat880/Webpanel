@@ -3,99 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Panel Hosting Website</title>
+    <title>Panel Creator - Public/Private</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap'); /* For H1 */
 
         :root {
-            --bg-color: #1a1b26; /* Dark background inspired by Tokyo Night */
-            --container-bg: #222436; /* Slightly lighter for containers */
-            --text-color: #c0caf5; /* Muted light blue/purple for text */
-            --accent-color: #bb9af7; /* Purple accent for buttons/highlights */
-            --success-color: #7dcfff; /* Bright blue for success */
-            --error-color: #f7768e; /* Red for errors */
-            --border-color: #414868; /* Subtle border color */
-            --input-bg: #292e42; /* Input field background */
-            --placeholder-color: #6d7b9d; /* Placeholder text */
-            --shadow-color: rgba(0, 0, 0, 0.4);
+            --bg-color: #0d1117; /* Deep dark blue-black */
+            --container-bg: #161b22; /* Slightly lighter container */
+            --border-color: #30363d; /* Dark border */
+            --text-color: #c9d1d9; /* Light off-white text */
+            --primary-accent: #58a6ff; /* Cyan/Light Blue for primary elements */
+            --secondary-accent: #a464f4; /* Purple for secondary accents */
+            --success-color: #3fb950; /* Green for success */
+            --error-color: #f85149; /* Red for errors */
+            --input-bg: #11141a; /* Even darker for inputs */
+            --placeholder-color: #8b949e;
+            --shadow-color: rgba(0, 0, 0, 0.7);
+            --gradient-1: linear-gradient(90deg, #61dafb 0%, #a464f4 100%); /* Adjusted gradient */
+            --gradient-2: linear-gradient(90deg, #a464f4 0%, #61dafb 100%); /* Adjusted gradient */
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            overflow-y: auto; 
             overflow-x: hidden;
+            position: relative;
         }
+
+        /* --- Particle / Background Effect --- */
+        .background-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden; 
+            z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            background: var(--primary-accent);
+            opacity: 0.2;
+            border-radius: 50%;
+            animation: moveParticle 15s infinite ease-in-out;
+        }
+        .particle:nth-child(2) { background: var(--secondary-accent); animation-duration: 20s; left: 30%; top: 60%; width: 80px; height: 80px; animation-delay: 2s; }
+        .particle:nth-child(3) { animation-duration: 18s; left: 70%; top: 20%; width: 50px; height: 50px; animation-delay: 0s; }
+        .particle:nth-child(4) { animation-duration: 25s; left: 10%; top: 10%; width: 100px; height: 100px; animation-delay: 5s; }
+        .particle:nth-child(5) { animation-duration: 22s; left: 5%; top: 40%; width: 55px; height: 55px; animation-delay: 8s; }
+        @keyframes moveParticle {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+            25% { transform: translate(20vw, 30vh) scale(1.2); opacity: 0.3; }
+            50% { transform: translate(50vw, -10vh) scale(0.8); opacity: 0.1; }
+            75% { transform: translate(80vw, 40vh) scale(1.1); opacity: 0.25; }
+            100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+        }
+        /* --- End Particle Effect --- */
+
 
         .container {
             background-color: var(--container-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px var(--shadow-color);
-            width: 100%;
-            max-width: 480px;
-            box-sizing: border-box;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px var(--shadow-color);
             border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 500px; /* Adjusted max-width for single form */
+            box-sizing: border-box;
             position: relative;
-            overflow: hidden;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            animation: containerEntry 0.6s ease-out forwards 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+            margin: 20px auto;
         }
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            left: -50px;
-            right: -50px;
-            bottom: -50px;
-            background: radial-gradient(circle at center, var(--accent-color) 0%, transparent 70%);
-            opacity: 0.05;
-            filter: blur(80px);
-            z-index: 0;
-            animation: containerGlow 15s infinite alternate;
-        }
-
-        @keyframes containerGlow {
-            0% { transform: scale(1); opacity: 0.05; }
-            50% { transform: scale(1.1); opacity: 0.1; }
-            100% { transform: scale(1); opacity: 0.05; }
-        }
-
-        .container > * {
-            position: relative;
-            z-index: 1;
+        @keyframes containerEntry {
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         h1 {
+            font-family: 'Orbitron', sans-serif; /* Futuristic font */
             text-align: center;
-            color: var(--accent-color);
-            margin-bottom: 25px;
-            font-size: 2em;
+            color: var(--primary-accent);
+            margin-bottom: 35px;
+            font-size: 2.5em;
             font-weight: 700;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 10px rgba(97, 218, 251, 0.4);
+        }
+        
+        .section-title { /* Not used in this version, but kept for consistency */
+            font-family: 'Orbitron', sans-serif;
+            color: var(--secondary-accent);
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 8px rgba(164, 100, 244, 0.3);
         }
 
+        /* --- Form Elements --- */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-size: 0.95em;
+            font-size: 0.9em;
             color: var(--text-color);
-            font-weight: 600;
+            font-weight: 500;
+            transition: color 0.2s ease;
         }
 
-        input[type="text"],
-        input[type="tel"],
-        input[type="password"],
-        input[type="number"],
-        select {
+        .input-glow-border {
             width: 100%;
             padding: 14px 18px;
             border: 1px solid var(--border-color);
@@ -107,132 +142,194 @@
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        input[type="text"]::placeholder,
-        input[type="tel"]::placeholder,
-        input[type="password"]::placeholder,
-        input[type="number"]::placeholder {
+        .input-glow-border::placeholder {
             color: var(--placeholder-color);
         }
 
-        input[type="text"]:focus,
-        input[type="tel"]:focus,
-        input[type="password"]:focus,
-        input[type="number"]:focus,
-        select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(187, 154, 247, 0.3);
+        .input-glow-border:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.3);
             outline: none;
         }
 
-        select {
+        select.input-glow-border {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23c0caf5%22%20d%3D%22M287%2069.9a14.2%2014.2%200%200%200-20.2%200L146.2%20190.4%2025.6%2069.9a14.2%2014.2%200%200%00-20.2%2020.2l130.6%20130.6a14.2%2014.2%200%200%0020.2%200L287%2090.1a14.2%2014.2%200%200%000-20.2z%22%2F%3E%3C%2Fsvg%3E');
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23e0e6f0%22%20d%3D%22M287%2069.9a14.2%2014.2%200%200%200-20.2%200L146.2%20190.4%2025.6%2069.9a14.2%2014.2%200%200%00-20.2%2020.2l130.6%20130.6a14.2%2014.2%200%200%0020.2%200L287%2090.1a14.2%2014.2%200%200%000-20.2z%22%2F%3E%3C%2Fsvg%3E');
             background-repeat: no-repeat;
             background-position: right 15px center;
             background-size: 12px;
             padding-right: 35px;
         }
+        /* --- End Form Elements --- */
 
-        button {
+        /* --- Button Style --- */
+        .cyber-button {
             width: 100%;
             padding: 16px;
-            background-color: var(--accent-color);
+            background-image: var(--gradient-1); /* Initial gradient */
             color: var(--bg-color);
             border: none;
             border-radius: 8px;
-            font-size: 1.15em;
+            font-size: 1.1em;
             font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            margin-top: 15px;
+            transition: all 0.3s ease;
+            margin-top: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .cyber-button:hover {
+            background-image: var(--gradient-2); /* Reverse gradient on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .cyber-button:active {
+            transform: translateY(0);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        button:hover {
-            background-color: #a485e6;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px var(--shadow-color);
+        .cyber-button::before { /* Animated border effect */
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid transparent;
+            border-image: var(--gradient-1) 1;
+            border-image-slice: 1;
+            z-index: 1;
+            animation: cyberBorder 2s linear infinite;
         }
 
-        button:active {
-            transform: translateY(0);
+        @keyframes cyberBorder {
+            0% { border-image: var(--gradient-1) 1; }
+            50% { border-image: var(--gradient-2) 1; }
+            100% { border-image: var(--gradient-1) 1; }
         }
 
-        button:disabled {
-            background-color: #555;
+        .cyber-button:disabled {
+            background-image: linear-gradient(90deg, #30363d 0%, #3d444e 100%);
+            color: #8b949e;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
+        .cyber-button:disabled::before {
+            animation: none;
+            border-image: none;
+            border-color: #30363d;
+        }
+        /* --- End Button Style --- */
 
-        /* Message/Result Display */
+        /* --- Loader/Spinner Style --- */
+        .loader-dots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            width: 30px; /* Space for dots */
+            height: 18px; /* Height of dots */
+            display: none; /* Hidden by default */
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: white;
+            margin: 0 3px;
+            animation: bounce 0.6s infinite alternate;
+        }
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes bounce {
+            to { transform: translateY(-5px); }
+        }
+        /* --- End Loader Style --- */
+
+        /* --- Message/Result Display --- */
         #responseMessage {
-            margin-top: 25px;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 0.95em;
-            line-height: 1.6;
-            word-wrap: break-word; /* Ensure long texts wrap */
-            white-space: pre-wrap; /* Preserve line breaks */
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 20px var(--shadow-color);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageEntry 0.5s ease-out forwards 0.2s;
+        }
+        @keyframes messageEntry {
+            to { opacity: 1; transform: translateY(0); }
         }
 
         #responseMessage.success {
-            background-color: rgba(125, 207, 255, 0.15); /* Light blue with transparency */
-            color: var(--success-color);
-            border: 1px solid var(--success-color);
-            padding: 20px; /* More padding for better look */
+            border-color: var(--success-color);
+            box-shadow: 0 8px 20px rgba(63, 185, 80, 0.2);
         }
-
         #responseMessage.error {
-            background-color: rgba(247, 118, 142, 0.15); /* Light red with transparency */
-            color: var(--error-color);
-            border: 1px solid var(--error-color);
+            border-color: var(--error-color);
+            box-shadow: 0 8px 20px rgba(248, 81, 73, 0.2);
         }
 
-        #responseMessage b {
-            color: var(--accent-color);
-        }
-        #responseMessage a {
+        .result-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 700;
             color: var(--success-color);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        #responseMessage a:hover {
-            text-decoration: underline;
-            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
         }
 
-        /* Styling for the result details */
-        .result-detail {
+        .result-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
             padding-bottom: 5px;
-            border-bottom: 1px dashed rgba(255,255,255,0.1); /* Subtle separator */
+            border-bottom: 1px dashed rgba(255,255,255,0.05);
         }
-        .result-detail:last-of-type {
-            border-bottom: none; /* No border for the last one */
+        .result-row:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
-        .result-detail span:first-child {
-            font-weight: 600;
-            color: var(--text-color);
-            min-width: 100px; /* Align labels */
+        .result-row span:first-child {
+            font-weight: 500;
+            color: var(--placeholder-color);
+            min-width: 90px;
+            padding-right: 10px;
         }
-        .result-detail span:last-child {
-            flex-grow: 1; /* Take remaining space */
+        .result-row span:last-child {
+            flex-grow: 1;
             text-align: right;
-            color: var(--accent-color);
+            color: var(--text-color);
             word-break: break-all;
+            font-weight: 600;
         }
-        .result-detail a {
-             /* Override for links in result details */
-            color: var(--success-color) !important;
-            word-break: break-all;
+        .result-row a {
+            color: var(--primary-accent) !important;
+            text-decoration: none;
+            transition: color 0.2s ease;
         }
-        .result-detail a:hover {
+        .result-row a:hover {
+            color: var(--secondary-accent) !important;
             text-decoration: underline;
         }
 
@@ -241,82 +338,159 @@
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
-            margin-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 30px;
             padding-top: 20px;
+            border-top: 1px solid var(--border-color);
         }
 
         .result-actions button {
-            width: calc(50% - 5px); /* Two buttons per row */
-            padding: 10px;
-            font-size: 0.9em;
+            flex: 1 1 calc(50% - 10px);
+            max-width: calc(50% - 5px);
+            padding: 10px 12px;
+            font-size: 0.8em;
             margin-top: 0;
-            box-shadow: none; /* Remove individual button shadow here */
-            background-color: #414868; /* Darker background for copy/login buttons */
+            box-shadow: none;
+            background-image: linear-gradient(90deg, #3a424e 0%, #444c56 100%);
             color: var(--text-color);
+            border: 1px solid var(--border-color);
+            white-space: nowrap;
+            transition: all 0.2s ease;
         }
         .result-actions button:hover {
-            background-color: #555c7f;
+            background-image: linear-gradient(90deg, #444c56 0%, #3a424e 100%);
             transform: translateY(-1px);
         }
-        /* Specific style for login button if desired */
         .result-actions button.login-panel-button {
-            background-color: var(--success-color);
+            background-image: var(--gradient-1);
             color: var(--bg-color);
+            border-color: transparent;
         }
         .result-actions button.login-panel-button:hover {
-            background-color: #61b1e3;
+            background-image: var(--gradient-2);
         }
 
-        /* New button for Copy All */
         .copy-all-button {
-            width: 100%; /* Full width */
-            margin-top: 15px; /* Space from other buttons */
-            background-color: var(--accent-color); /* Use accent color for main copy button */
+            width: 100%;
+            margin-top: 20px;
+            background-image: var(--gradient-1);
             color: var(--bg-color);
-            padding: 12px;
-            font-size: 1em;
-            font-weight: 600;
+            font-size: 0.95em;
+            padding: 14px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
         .copy-all-button:hover {
-            background-color: #a485e6;
+            background-image: var(--gradient-2);
+            transform: translateY(-2px);
         }
 
         .contact-message {
-            font-size: 0.85em;
-            color: #999;
+            font-size: 0.8em;
+            color: var(--placeholder-color);
             text-align: center;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
         }
         .contact-message a {
-            color: var(--accent-color);
+            color: var(--primary-accent);
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
         }
         .contact-message a:hover {
             text-decoration: underline;
         }
+        /* --- End Message/Result Display --- */
+
+        /* --- Toast Notification --- */
+        #toast-notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast-notification {
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-color);
+            animation: slideInRight 0.4s ease-out forwards, fadeOut 0.5s ease-in forwards 2.5s;
+            transform: translateX(100%);
+            opacity: 0;
+            min-width: 250px;
+            max-width: 350px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .toast-notification.success { border-left: 4px solid var(--success-color); }
+        .toast-notification.error { border-left: 4px solid var(--error-color); }
+        .toast-notification.info { border-left: 4px solid var(--primary-accent); }
+
+        .toast-notification .icon { font-size: 1.4em; line-height: 1; }
+        .toast-notification.success .icon { color: var(--success-color); }
+        .toast-notification.error .icon { color: var(--error-color); }
+        .toast-notification.info .icon { color: var(--primary-accent); }
+        .toast-notification .message { flex-grow: 1; }
+        
+        .toast-notification .close-btn {
+            background: none;
+            border: none;
+            color: var(--placeholder-color);
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 0 5px;
+            transition: color 0.2s ease;
+        }
+        .toast-notification .close-btn:hover { color: var(--text-color); }
+
+        @keyframes slideInRight { to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        /* --- End Toast Notification --- */
+
     </style>
 </head>
 <body>
+    <div class="background-particles">
+        <div class="particle" style="width: 60px; height: 60px; left: 10%; top: 10%;"></div>
+        <div class="particle" style="width: 40px; height: 40px; left: 80%; top: 30%;"></div>
+        <div class="particle" style="width: 90px; height: 90px; left: 20%; top: 80%;"></div>
+        <div class="particle" style="width: 70px; height: 70px; left: 60%; top: 5%;"></div>
+        <div class="particle" style="width: 55px; height: 55px; left: 5%; top: 40%;"></div>
+    </div>
+
     <div class="container">
-        <h1>Create Panel Hosting Website</h1>
+        <h1>CREATE PANEL</h1>
         <form id="createPanelForm">
             <div class="form-group">
                 <label for="accessKey">Access Key:</label>
-                <input type="password" id="accessKey" name="accessKey" placeholder="Masukkan Access Key Anda" required>
+                <input type="password" id="accessKey" name="accessKey" placeholder="Masukkan Access Key Anda" class="input-glow-border" required>
+            </div>
+
+            <div class="form-group">
+                <label for="panelType">Tipe Panel:</label>
+                <select id="panelType" name="panelType" class="input-glow-border" required>
+                    <option value="" disabled selected>Pilih Tipe Panel</option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="username">Username:</label>
-                <input type="text" id="username" name="username" placeholder="Contoh: user_keren2025" required>
+                <input type="text" id="username" name="username" placeholder="Contoh: user_keren2025" class="input-glow-border" required minlength="4" maxlength="16" pattern="^[a-zA-Z0-9_.-]+$" title="Hanya huruf, angka, underscore, titik, atau dash. Minimal 4, Maksimal 16 karakter.">
             </div>
 
             <div class="form-group">
                 <label for="hostingPackage">Paket Hosting:</label>
-                <select id="hostingPackage" name="hostingPackage" required>
+                <select id="hostingPackage" name="hostingPackage" class="input-glow-border" required>
                     <option value="" disabled selected>Pilih Paket</option>
                     <option value="unlimited">Unlimited</option>
                     <option value="10gb">10 GB</option>
@@ -332,12 +506,21 @@
                 </select>
             </div>
 
-            <button type="submit" id="createButton">Create Panel</button>
+            <button type="submit" id="createButton" class="cyber-button">
+                Create Panel
+                <span class="loader-dots" id="loadingSpinner">
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </span>
+            </button>
         </form>
 
         <div id="responseMessage" class=""></div>
 
     </div>
+
+    <div id="toast-notification-container"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 
@@ -347,58 +530,205 @@
             // PERINGATAN: MENYIMPAN INFORMASI INI DI CLIENT-SIDE SANGAT TIDAK AMAN.
             // SIAPAPUN BISA MELIHATNYA DENGAN "VIEW SOURCE" ATAU DEVELOPER TOOLS BROWSER.
             // API Keys akan terlihat jelas di URL permintaan HTTP.
-            const PTERODACTYL_DOMAIN = "kantinpublic.paneldo.biz.id"; // Ganti dengan domain panel Pterodactyl Anda
-            const PTERODACTYL_PTLA = "ptla_gNaW7Gk9y8MX2o7Ex5reIrjr11vojFckxW6Z1Cs7uU9"; // Ganti dengan Application API Key Anda
-            const PTERODACTYL_PTLC = "ptlc_PMY0KbtViCA2FS3RFqRvKpmXE4og1Zkb1mJtf8gRXDm"; // Ganti dengan Client API Key Anda
-            const DEFAULT_EGG_ID = "15";                               // Ganti dengan Egg ID default Anda
-            const DEFAULT_NEST_ID = "5";                               // Ganti dengan Nest ID default Anda
-            const DEFAULT_LOCATION_ID = "1";                           // Ganti dengan Location ID default Anda
+            // UNTUK PRODUKSI, GUNAKAN SOLUSI BACKEND (SERVERLESS FUNCTION) UNTUK KEAMANAN SEJATI!
+
+            const PUBLIC_PANEL_CONFIG = {
+                domain: "kantinpublic.nyl.web.id", // NEW Public Domain
+                ptla: "ptla_q3bWSH1H9AET2wkDoXp2RSFAD9tnlr3YbmAo5BjMCaQ", // NEW Public PTLA
+                ptlc: "ptlc_cVhHXMF5BeDsJ9jWsz3kRvsgxJ3JHGuRvlsUOa0sYCq", // NEW Public PTLC
+                eggId: "15",                                // Default Egg ID for Public Panel (assuming same as previous default)
+                nestId: "5",                                // Default Nest ID for Public Panel (assuming same as previous default)
+                loc: "1"                                    // Default Location ID for Public Panel (assuming same as previous default)
+            };
+
+            const PRIVATE_PANEL_CONFIG = {
+                domain: "serverkantinprivate.paneldo.biz.id", // NEW Private Domain
+                ptla: "ptla_WPIXUBoDVgMOFIL4T7buIAlq5wYjBk5VI9JLGCLlUcQ", // NEW Private PTLA
+                ptlc: "ptlc_UjAK6lWzp2tbOCl6tAZKC2NeIWBoaUScYV8M0m2J9oB", // NEW Private PTLC
+                eggId: "15",                                // Example: Different Egg ID for Private Panel
+                nestId: "5",                                // Example: Different Nest ID for Private Panel
+                loc: "1"                                    // Example: Different Location ID for Private Panel
+            };
+
+            // Flags untuk mengaktifkan/menonaktifkan opsi panel di UI
+            const IS_PUBLIC_PANEL_ENABLED = true; // Set ke false jika Public Panel tidak ingin ditampilkan
+            const IS_PRIVATE_PANEL_ENABLED = true; // Set ke false jika Private Panel tidak ingin ditampilkan
 
             // Access Key untuk website ini (hardcoded) - SANGAT TIDAK AMAN UNTUK AKSES PUBLIK
             const WEBSITE_ACCESS_KEY = "MATCP-X4A2F8E1B9D7C6"; // Ganti dengan Access Key yang Anda inginkan
 
-            // Link dasar dengan placeholder (jangan ubah format ini)
-            const BASE_URL_TEMPLATE = "https://restapi.mat.web.id/api/pterodactyl/create?username=&ram=&disk=&cpu=&eggid=&nestid=&loc=&domain=&ptla=&ptlc=";
-            // --- AKHIR KONFIGURASI SENSITIF ---
+            // Base URL untuk API Pterodactyl eksternal
+            const BASE_URL_PTERODACTYL_API = "https://restapi.mat.web.id/api/pterodactyl/create?username=&ram=&disk=&cpu=&eggid=&nestid=&loc=&domain=&ptla=&ptlc=";
+            
+            // Harga dan Spec Paket (tetap sama)
+            const PACKAGES = {
+                "1gb": { ram: 1024, disk: 1024, cpu: 100, name: "1 GB" },
+                "2gb": { ram: 2048, disk: 2048, cpu: 100, name: "2 GB" },
+                "3gb": { ram: 3072, disk: 3072, cpu: 100, name: "3 GB" },
+                "4gb": { ram: 4096, disk: 4096, cpu: 100, name: "4 GB" },
+                "5gb": { ram: 5120, disk: 5120, cpu: 100, name: "5 GB" },
+                "6gb": { ram: 6144, disk: 6144, cpu: 100, name: "6 GB" },
+                "7gb": { ram: 7168, disk: 7168, cpu: 100, name: "7 GB" },
+                "8gb": { ram: 8192, disk: 8192, cpu: 100, name: "8 GB" },
+                "9gb": { ram: 9216, disk: 9216, cpu: 100, name: "9 GB" },
+                "10gb": { ram: 10240, disk: 10240, cpu: 200, name: "10 GB" },
+                "unlimited": { ram: 0, disk: 0, cpu: 0, name: "Unlimited" }
+            };
+            // --- AKHIR KONFIGURASI ---
 
 
             const createPanelForm = document.getElementById('createPanelForm');
             const createButton = document.getElementById('createButton');
             const responseMessageDiv = document.getElementById('responseMessage');
-            
-            // Fungsi penampil pesan
-            function showMessage(type, messageHTML) {
-                responseMessageDiv.className = type; // 'success' or 'error'
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const toastContainer = document.getElementById('toast-notification-container');
+            const panelTypeSelect = document.getElementById('panelType'); // Get the select element
+
+            // --- Fungsi Utility ---
+            function showMainMessage(type, messageHTML) {
+                responseMessageDiv.className = type; 
                 responseMessageDiv.innerHTML = messageHTML;
+                responseMessageDiv.style.opacity = 0; 
+                responseMessageDiv.style.transform = 'translateY(20px)'; 
+                void responseMessageDiv.offsetWidth; 
+                responseMessageDiv.style.opacity = 1; 
+                responseMessageDiv.style.transform = 'translateY(0)'; 
             }
+
+            function showToast(type, message, duration = 3000) {
+                const toast = document.createElement('div');
+                toast.classList.add('toast-notification', type); 
+
+                let icon = '';
+                if (type === 'success') icon = '<i class="fas fa-check-circle"></i>';
+                else if (type === 'error') icon = '<i class="fas fa-times-circle"></i>';
+                else if (type === 'info') icon = '<i class="fas fa-info-circle"></i>';
+
+                toast.innerHTML = `
+                    <span class="icon">${icon}</span>
+                    <span class="message">${message}</span>
+                    <button class="close-btn">&times;</button>
+                `;
+
+                toast.querySelector('.close-btn').addEventListener('click', () => {
+                    toast.remove();
+                });
+
+                toastContainer.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.animation = 'fadeOut 0.5s ease-in forwards';
+                    toast.addEventListener('animationend', () => {
+                        toast.remove();
+                    });
+                }, duration);
+            }
+
+            // Fungsi untuk mempopulasi dropdown tipe panel
+            function populatePanelTypeDropdown() {
+                panelTypeSelect.innerHTML = '<option value="" disabled selected>Pilih Tipe Panel</option>'; // Reset default option
+
+                let optionsAdded = 0;
+                if (IS_PUBLIC_PANEL_ENABLED) {
+                    const publicOption = document.createElement('option');
+                    publicOption.value = 'public';
+                    publicOption.textContent = 'Public Panel';
+                    panelTypeSelect.appendChild(publicOption);
+                    optionsAdded++;
+                }
+
+                if (IS_PRIVATE_PANEL_ENABLED) {
+                    const privateOption = document.createElement('option');
+                    privateOption.value = 'private';
+                    privateOption.textContent = 'Private Panel';
+                    panelTypeSelect.appendChild(privateOption);
+                    optionsAdded++;
+                }
+
+                if (optionsAdded === 0) {
+                    const noOption = document.createElement('option');
+                    noOption.value = '';
+                    noOption.textContent = 'Tidak ada panel tersedia';
+                    noOption.disabled = true;
+                    panelTypeSelect.appendChild(noOption);
+                    panelTypeSelect.disabled = true; // Disable dropdown if no options
+                } else if (optionsAdded === 1) {
+                    panelTypeSelect.selectedIndex = 1; // Select the only option available
+                }
+            }
+            // --- End Fungsi Utility ---
+
+            // Panggil fungsi populasi dropdown saat DOM siap
+            populatePanelTypeDropdown();
 
             createPanelForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
 
-                createButton.textContent = 'Membuat...';
+                createButton.textContent = 'Creating Panel'; 
                 createButton.disabled = true;
-                responseMessageDiv.innerHTML = ''; // Kosongkan pesan sebelumnya
-                responseMessageDiv.className = ''; // Hapus kelas sebelumnya
+                loadingSpinner.style.display = 'flex'; 
+                responseMessageDiv.innerHTML = ''; 
+                responseMessageDiv.className = ''; 
 
                 const accessKey = document.getElementById('accessKey').value;
+                const selectedPanelType = panelTypeSelect.value; // Get selected panel type
                 const username = document.getElementById('username').value;
                 const hostingPackage = document.getElementById('hostingPackage').value;
 
                 // --- Validasi Access Key ---
                 if (accessKey !== WEBSITE_ACCESS_KEY) {
-                    showMessage('error', 'Access Key Salah. Silakan coba lagi.');
+                    showToast('error', 'Access Key Salah!');
                     createButton.textContent = 'Create Panel';
                     createButton.disabled = false;
+                    loadingSpinner.style.display = 'none'; // Hide spinner
                     return;
                 }
                 // --- Akhir Validasi Access Key ---
 
-                if (!username || !hostingPackage) {
-                    showMessage('error', 'Username dan Paket Hosting harus diisi!');
+                // --- Validasi Tipe Panel ---
+                if (!selectedPanelType) {
+                    showToast('error', 'Silakan pilih tipe panel (Public/Private)!');
                     createButton.textContent = 'Create Panel';
                     createButton.disabled = false;
+                    loadingSpinner.style.display = 'none';
                     return;
                 }
+
+                // Pilih konfigurasi berdasarkan tipe panel
+                let currentPanelConfig;
+                if (selectedPanelType === 'public') {
+                    currentPanelConfig = PUBLIC_PANEL_CONFIG;
+                } else if (selectedPanelType === 'private') {
+                    currentPanelConfig = PRIVATE_PANEL_CONFIG;
+                } else {
+                    showToast('error', 'Tipe panel tidak valid!');
+                    createButton.textContent = 'Create Panel';
+                    createButton.disabled = false;
+                    loadingSpinner.style.display = 'none';
+                    return;
+                }
+                // --- Akhir Validasi Tipe Panel ---
+
+
+                // --- Validasi Username dan Paket Hosting ---
+                if (!username || !hostingPackage) {
+                    showToast('error', 'Username dan Paket Hosting harus diisi!');
+                    createButton.textContent = 'Create Panel';
+                    createButton.disabled = false;
+                    loadingSpinner.style.display = 'none'; // Hide spinner
+                    return;
+                }
+
+                // Validasi format username (sesuai pattern di HTML)
+                const usernameInput = document.getElementById('username');
+                if (!usernameInput.checkValidity()) {
+                    showToast('error', `Username tidak valid: ${usernameInput.title}`);
+                    createButton.textContent = 'Create Panel';
+                    createButton.disabled = false;
+                    loadingSpinner.style.display = 'none'; // Hide spinner
+                    return;
+                }
+                // --- Akhir Validasi Input ---
 
                 let ram, disk, cpu;
 
@@ -424,25 +754,26 @@
                     case '2gb': ram = 2048; disk = 2048; cpu = 100; break;
                     case '1gb': ram = 1024; disk = 1024; cpu = 100; break;
                     default:
-                        showMessage('error', 'Pilih paket hosting yang valid.');
+                        showToast('error', 'Pilih paket hosting yang valid.');
                         createButton.textContent = 'Create Panel';
                         createButton.disabled = false;
+                        loadingSpinner.style.display = 'none'; // Hide spinner
                         return;
                 }
                 
                 // --- PENTING: Pengisian placeholder di URL template ---
-                // Pastikan nilai-nilai ini di-encode untuk URL
-                const finalUrl = BASE_URL_TEMPLATE
+                // Gunakan konfigurasi yang dipilih secara dinamis
+                const finalUrl = BASE_URL_PTERODACTYL_API
                     .replace('username=', `username=${encodeURIComponent(username)}`)
                     .replace('ram=', `ram=${ram}`) 
                     .replace('disk=', `disk=${disk}`)
                     .replace('cpu=', `cpu=${cpu}`)
-                    .replace('eggid=', `eggid=${DEFAULT_EGG_ID}`)
-                    .replace('nestid=', `nestid=${DEFAULT_NEST_ID}`)
-                    .replace('loc=', `loc=${DEFAULT_LOCATION_ID}`)
-                    .replace('domain=', `domain=${encodeURIComponent(PTERODACTYL_DOMAIN)}`) 
-                    .replace('ptla=', `ptla=${PTERODACTYL_PTLA}`)
-                    .replace('ptlc=', `ptlc=${PTERODACTYL_PTLC}`);
+                    .replace('eggid=', `eggid=${currentPanelConfig.eggId}`) // Ambil dari config
+                    .replace('nestid=', `nestid=${currentPanelConfig.nestId}`) // Ambil dari config
+                    .replace('loc=', `loc=${currentPanelConfig.loc}`) // Ambil dari config
+                    .replace('domain=', `domain=${encodeURIComponent(currentPanelConfig.domain)}`) // Ambil dari config
+                    .replace('ptla=', `ptla=${currentPanelConfig.ptla}`) // Ambil dari config
+                    .replace('ptlc=', `ptlc=${currentPanelConfig.ptlc}`); // Ambil dari config
                 // --- Akhir Pengisian Placeholder ---
 
                 try {
@@ -455,7 +786,7 @@
 
                     if (response.ok && data.status) { // Asumsi `data.status` dari respons menandakan sukses
                         const result = data.result;
-                        const panelDomainUrl = result.domain; // Gunakan domain dari API langsung
+                        const panelDomainUrl = result.domain; 
 
                         // Konten yang akan dicopy secara keseluruhan (diformat lebih rapi)
                         const fullTextToCopy = `
@@ -465,6 +796,7 @@
 Username: ${result.username}
 Password: ${result.password}
 Paket: ${hostingPackage.toUpperCase()}
+Tipe Panel: ${selectedPanelType.toUpperCase()}
 ID User: ${result.id_user}
 Server ID: ${result.id_server}
 Domain: ${panelDomainUrl}
@@ -473,12 +805,14 @@ Domain: ${panelDomainUrl}
 
                         // Merapikan tampilan pesan sukses
                         const successMessageHTML = `
-                            <div class="result-detail"><span>Username:</span> <span id="copyUsernameValue">${result.username}</span></div>
-                            <div class="result-detail"><span>Password:</span> <span id="copyPasswordValue">${result.password}</span></div>
-                            <div class="result-detail"><span>Paket:</span> <span>${hostingPackage.toUpperCase()}</span></div>
-                            <div class="result-detail"><span>ID User:</span> <span>${result.id_user}</span></div>
-                            <div class="result-detail"><span>Server ID:</span> <span>${result.id_server}</span></div>
-                            <div class="result-detail"><span>Domain:</span> <span id="copyDomainValue"><a href="${panelDomainUrl}" target="_blank">${result.domain}</a></span></div>
+                            <div class="result-title">Panel Berhasil Dibuat!</div>
+                            <div class="result-row"><span>Username:</span> <span id="copyUsernameValue">${result.username}</span></div>
+                            <div class="result-row"><span>Password:</span> <span id="copyPasswordValue">${result.password}</span></div>
+                            <div class="result-row"><span>Paket:</span> <span>${hostingPackage.toUpperCase()}</span></div>
+                            <div class="result-row"><span>Tipe Panel:</span> <span>${selectedPanelType.toUpperCase()}</span></div>
+                            <div class="result-row"><span>ID User:</span> <span>${result.id_user}</span></div>
+                            <div class="result-row"><span>Server ID:</span> <span>${result.id_server}</span></div>
+                            <div class="result-row"><span>Domain:</span> <span id="copyDomainValue"><a href="${panelDomainUrl}" target="_blank">${result.domain}</a></span></div>
                             
                             <div class="result-actions">
                                 <button class="copy-button" data-copy-target="copyUsernameValue">Copy Username</button>
@@ -491,21 +825,25 @@ Domain: ${panelDomainUrl}
                                 Jika tidak bisa login, silakan hubungi <a href="#">Admin</a>
                             </p>
                         `;
-                        showMessage('success', successMessageHTML);
+                        showMainMessage('success', successMessageHTML); 
                         createPanelForm.reset(); 
+                        showToast('success', 'Panel berhasil dibuat!'); 
 
                     } else {
                         // Jika respons bukan OK atau data.status false
                         const errorMessage = data.message || (data.errors && data.errors[0] ? data.errors[0].detail : 'Terjadi kesalahan yang tidak diketahui.');
-                        showMessage('error', `<b>Gagal membuat server!</b><br>Pesan: ${errorMessage}`);
+                        showMainMessage('error', `<b>Gagal membuat server!</b><br>Pesan: ${errorMessage}`); 
+                        showToast('error', 'Gagal membuat panel!'); 
                     }
                 } catch (error) {
                     // Terjadi error jaringan (misalnya CORS block)
                     console.error('Error saat menghubungi API eksternal:', error);
-                    showMessage('error', `Terjadi kesalahan jaringan atau server tidak merespons: ${error.message}.<br>Jika ini terjadi terus, kemungkinan besar masalah CORS dari server restapi.mat.web.id.`);
+                    showMainMessage('error', `Terjadi kesalahan jaringan atau server tidak merespons: ${error.message}.<br>Jika ini terjadi terus, kemungkinan besar masalah CORS dari server restapi.mat.web.id.`); 
+                    showToast('error', 'Kesalahan koneksi API!'); 
                 } finally {
                     createButton.textContent = 'Create Panel';
                     createButton.disabled = false;
+                    loadingSpinner.style.display = 'none'; // Hide spinner
                 }
             });
 
@@ -518,30 +856,31 @@ Domain: ${panelDomainUrl}
                     if (textToCopy) {
                         try {
                             await navigator.clipboard.writeText(textToCopy);
+                            showToast('info', `Disalin: ${textToCopy.substring(0, Math.min(25, textToCopy.length))}...`); 
                             event.target.textContent = 'Copied!';
                             setTimeout(() => {
-                                // Reset button text based on its original target
                                 if (targetId === 'copyUsernameValue') event.target.textContent = 'Copy Username';
                                 else if (targetId === 'copyPasswordValue') event.target.textContent = 'Copy Password';
                                 else if (targetId === 'copyDomainValue') event.target.textContent = 'Copy Domain';
                             }, 1500);
                         } catch (err) {
                             console.error('Failed to copy text:', err);
-                            alert('Gagal menyalin. Silakan salin manual.');
+                            showToast('error', 'Gagal menyalin!');
                         }
                     }
-                } else if (event.target.classList.contains('copy-all-button')) { // Logic for "Copy All Details" button
+                } else if (event.target.classList.contains('copy-all-button')) { 
                     const textToCopy = event.target.dataset.copyValue;
                      if (textToCopy) {
                         try {
                             await navigator.clipboard.writeText(textToCopy);
+                            showToast('info', 'Semua detail berhasil disalin!'); 
                             event.target.textContent = 'All Copied!';
                             setTimeout(() => {
                                 event.target.textContent = 'Copy All Details';
                             }, 1500);
                         } catch (err) {
                             console.error('Failed to copy all text:', err);
-                            alert('Gagal menyalin semua. Silakan salin manual.');
+                            showToast('error', 'Gagal menyalin semua!');
                         }
                     }
                 }
